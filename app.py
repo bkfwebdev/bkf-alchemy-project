@@ -3,7 +3,11 @@ from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgres:///blogly"
+# app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///blogly"
+# app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://{username}:{password}@localhost:{port}/foodversity_db".format(username=pg_user, password=pg_pwd, port=pg_port)
+# postgresql://user:password@localhost:5432/database_name
+# postgresql://postgres:Over9000@localhost:5432/blogly 
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:Over9000@localhost:5432/blogly"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'ihaveasecret'
 

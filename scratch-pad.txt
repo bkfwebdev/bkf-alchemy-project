@@ -1,0 +1,14 @@
+ * Debug mode: off
+Usage: flask run [OPTIONS]
+Try 'flask run --help' for help.
+
+Error: While importing 'app', an ImportError was raised:
+
+Traceback (most recent call last):
+  File "c:\users\bryan\springboard\python-projects\bkf-alchemy\appenv\lib\site-packages\flask\cli.py", line 256, in locate_app
+    __import__(module_name)
+  File "C:\Users\bryan\springboard\Python-Projects\bkf-alchemy\app.py", line 3, in <module>
+    from models import db, connect_db, User
+  File "C:\Users\bryan\springboard\Python-Projects\bkf-alchemy\models.py", line 3, in <module>
+    from flask_sqlalchemy import SQLAlchemy
+ModuleNotFoundError: No module named 'flask_sqlalchemy'
