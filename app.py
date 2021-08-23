@@ -25,9 +25,16 @@ db.create_all()
 
 @app.route('/')
 def root():
-    """Homepage redirects to list of users."""
+    """Show list of post, most recent first"""
+    posts = Post.query.order_by(Post.created_at.desc()).limit(5).all()
+    return render_template("posts/homepage.html", posts=posts)
+    #return redirect("/users")
 
-    return redirect("/users")
+@app.errorhandler(404)
+def page_not_found(e):
+    """Show 404 page not found"""
+    return render_template('404.html'),404
+
 
 
 ##############################################################################
@@ -101,5 +108,6 @@ def users_destroy(user_id):
     user = User.query.get_or_404(user_id)
     db.session.delete(user)
     db.session.commit()
+    flash(f"User {user.full_name} deleted")
 
     return redirect("/users")
