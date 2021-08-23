@@ -111,3 +111,11 @@ def users_destroy(user_id):
     flash(f"User {user.full_name} deleted")
 
     return redirect("/users")
+
+@app.route('/users/<int:user_id>/posts/new')
+def post_new_form(user_id):
+    """show form to create new post for specific user"""
+
+    user = User.query.get_or_404(user_id)
+    return render_template('post/new.html', user = user)
+    
