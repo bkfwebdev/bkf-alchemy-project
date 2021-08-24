@@ -3,10 +3,10 @@ from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///blogly"
-# app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://{username}:{password}@localhost:{port}/foodversity_db".format(username=pg_user, password=pg_pwd, port=pg_port)
-# postgresql://user:password@localhost:5432/database_name
-# postgresql://postgres:Over9000@localhost:5432/blogly 
+# app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///blogly" - did not work
+# app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://{username}:{password}@localhost:{port}/foodversity_db".format(username=pg_user, password=pg_pwd, port=pg_port) - did not work
+# postgresql://user:password@localhost:5432/database_name - template
+# postgresql://postgres:Over9000@localhost:5432/blogly - this works
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:Over9000@localhost:5432/blogly"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'ihaveasecret'
@@ -28,13 +28,13 @@ def root():
     """Show list of post, most recent first"""
     posts = Post.query.order_by(Post.created_at.desc()).limit(5).all()
     return render_template("posts/homepage.html", posts=posts)
-    #return redirect("/users")
+    # return redirect("/users")
+
 
 @app.errorhandler(404)
 def page_not_found(e):
     """Show 404 page not found"""
-    return render_template('404.html'),404
-
+    return render_template('404.html'), 404
 
 
 ##############################################################################
@@ -112,10 +112,35 @@ def users_destroy(user_id):
 
     return redirect("/users")
 
+
 @app.route('/users/<int:user_id>/posts/new')
 def post_new_form(user_id):
     """show form to create new post for specific user"""
 
     user = User.query.get_or_404(user_id)
-    return render_template('post/new.html', user = user)
+    return render_template('post/new.html', user=user)
+
+
+@app.route('/users/<int:user_id>/posts/new', methods=["POST"])
+def posts_new(user_id):
+    """ handle form submission - new post """
+
+    user = User.query.get_or_404(user_id)
+    new_post = Post(title=request.form['title'],
+                    content=request.form['content'],
+                    user=user)
+
+    db.session.add(new_post)
+    db.session.commit()
+    flash(f"Post '{new_post.title}' added.")
+
+    return redirect(f"/users/{user_id}")
+
+@app.route('/posts/<int:post_id>')
+def posts_show(post_id):
+    """show page with specific post"""
+
+    post = Post.query.get_or_404(post_id)
+    return render_template('posts/show.html', post = post)
+
     
