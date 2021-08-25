@@ -167,8 +167,8 @@ def posts_update(post_id):
 
     return redirect(f"/users/{post.user_id}")
 
- @app.route('/posts/<int:post_id>/delete', methods = ["POST"])
- def post_destroy(post_id):
+@app.route('/posts/<int:post_id>/delete', methods = ["POST"])
+def post_destroy(post_id):
      """Handle form submission for deleting an existing post"""
 
      post = Post.query.get_or_404(post_id)
