@@ -136,16 +136,46 @@ def posts_new(user_id):
 
     return redirect(f"/users/{user_id}")
 
+
 @app.route('/posts/<int:post_id>')
 def posts_show(post_id):
     """show page with specific post"""
 
     post = Post.query.get_or_404(post_id)
-    return render_template('posts/show.html', post = post)
+    return render_template('posts/show.html', post=post)
+
 
 @app.route('/posts/<int:post_id>/edit')
 def posts_edit(post_id):
     """form to edit an existing post"""
 
     post = Post.query.get_or_404(post_id)
-    return render_template('posts/edit.html', post=post)    
+    return render_template('posts/edit.html', post=post)
+
+
+@app.route('/post/<int:post_id>/edit', methods=["POST"])
+def posts_update(post_id):
+    """handle post update form submission"""
+
+    post = Post.query.get_or_404(post_id)
+    post.title = request.form['title']
+    post.content = request.form['content']
+
+    db.session.add(post)
+    db.session.commit()
+    flash(f"Post '{post.title}' edited.")
+
+    return redirect(f"/users/{post.user_id}")
+
+ @app.route('/posts/<int:post_id>/delete', methods = ["POST"])
+ def post_destroy(post_id):
+     """Handle form submission for deleting an existing post"""
+
+     post = Post.query.get_or_404(post_id)
+     
+
+     db.session.delete(post)
+     db.session.commit()
+     flash(f"Post '{post.title}' deleted.")
+
+     return redirect(f"/users/{post.user_id}")
